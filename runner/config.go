@@ -35,7 +35,7 @@ type Config struct {
 
 type cfgBuild struct {
 	Cmd              string        `toml:"cmd"`
-	PreBuild         []preBuilder  `toml:"pre_builder"`
+	PreBuildCmd      string        `toml:"pre_build_cmd"`
 	Bin              string        `toml:"bin"`
 	FullBin          string        `toml:"full_bin"`
 	ArgsBin          []string      `toml:"args_bin"`
@@ -309,11 +309,9 @@ func (c *Config) preprocess() error {
 	runtimeArgs := flag.Args()
 	c.Build.ArgsBin = append(c.Build.ArgsBin, runtimeArgs...)
 
-	for _, preBuild := range c.Build.PreBuild {
-		if preBuild.Cmd == "" || preBuild.OnlyExt == "" {
-			return fmt.Errorf("pre_build cmd and only_ext are required")
-		}
-	}
+	// if c.Build.PreBuildCmd == "" {
+	// 	return fmt.Errorf("pre_build cmd required")
+	// }
 
 	return err
 }

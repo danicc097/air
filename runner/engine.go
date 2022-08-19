@@ -417,28 +417,26 @@ func (e *Engine) flushEvents() []string {
 }
 
 func (e *Engine) preBuilding(fileEvents []string) error {
-	for _, preBuild := range e.config.Build.PreBuild {
-		executePreBuild := len(fileEvents) == 0
+	executePreBuild := len(fileEvents) == 0
 
-		for _, fileEvent := range fileEvents {
-			ext := filepath.Ext(fileEvent)
+	// TODO dont listen to more changes until pre build is done
+	for _, fileEvent := range fileEvents {
+		_ = filepath.Ext(fileEvent)
 
-			if ext == "."+strings.TrimSpace(preBuild.OnlyExt) {
-				executePreBuild = true
-				break
-			}
-		}
-
-		if !executePreBuild {
-			continue
-		}
-
-		message := fmt.Sprintf("execute pre build %q...", preBuild.Cmd)
-
-		if err := e.execCommand(preBuild.Cmd, message); err != nil {
-			return err
-		}
+		executePreBuild = true
 	}
+
+	if !executePreBuild {
+		return nil
+	}
+
+	message := fmt.Sprintf("execute pre build %q...", e.config.Build.PreBuildCmd)
+
+	if err := e.execCommand(e.config.Build.PreBuildCmd, message); err != nil {
+		return err
+	}
+
+	e.flushEvents()
 
 	return nil
 }
