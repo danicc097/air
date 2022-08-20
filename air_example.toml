@@ -20,6 +20,8 @@ exclude_dir = ["assets", "tmp", "vendor", "frontend/node_modules"]
 include_dir = []
 # Exclude files.
 exclude_file = []
+# Stop watching files or directories while building.
+stop_watch = []
 # Exclude specific regular expressions.
 exclude_regex = ["_test\\.go"]
 # Exclude unchanged files.
@@ -40,11 +42,11 @@ kill_delay = 500 # ms
 args_bin = ["hello", "world"]
 #execute commands before building the app (only if extension changes)
 [[build.pre_builder]]
-  cmd = "gqlgen generate"
-  only_ext = "graphql"
+cmd = "gqlgen generate"
+only_ext = "graphql"
 [[build.pre_builder]]
-  cmd = "go generate"
-  only_ext = "tmpl"
+cmd = "go generate"
+only_ext = "tmpl"
 
 [log]
 # Show log time
