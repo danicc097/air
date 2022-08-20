@@ -317,7 +317,13 @@ func (e *Engine) start() {
 			e.mainDebug("exit in start")
 			return
 		case filename = <-e.eventCh:
+			// TODO if currently building, dont check for file changes in a given []exclusions -> inf loop
+
 			if !e.isIncludeExt(filename) {
+				continue
+			}
+			if is, _ := e.isExcludeRegex(filename); is {
+				// fmt.Printf("%s is a '%t' excludedRegex\n", filename, is)
 				continue
 			}
 			if e.config.Build.ExcludeUnchanged {
@@ -372,6 +378,12 @@ func (e *Engine) buildRun(fileEvents []string) {
 	case <-e.canExit:
 	default:
 	}
+
+	for _, p := range e.config.Build.StopWatch {
+		e.buildLog("ignoring changes while building in: %s\n", p)
+		e.watcher.Remove(p)
+	}
+
 	var err error
 	if err = e.preBuilding(fileEvents); err != nil {
 		e.canExit <- true
@@ -387,6 +399,9 @@ func (e *Engine) buildRun(fileEvents []string) {
 		if e.config.Build.StopOnError {
 			return
 		}
+	}
+	for _, p := range e.config.Build.StopWatch {
+		e.watcher.Add(p)
 	}
 
 	select {

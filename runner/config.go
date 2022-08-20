@@ -45,6 +45,7 @@ type cfgBuild struct {
 	IncludeDir       []string      `toml:"include_dir"`
 	ExcludeFile      []string      `toml:"exclude_file"`
 	ExcludeRegex     []string      `toml:"exclude_regex"`
+	StopWatch        []string      `toml:"stop_watch"`
 	ExcludeUnchanged bool          `toml:"exclude_unchanged"`
 	FollowSymlink    bool          `toml:"follow_symlink"`
 	Delay            int           `toml:"delay"`
