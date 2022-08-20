@@ -314,7 +314,12 @@ func (e *Engine) start() {
 			e.mainDebug("exit in start")
 			return
 		case filename = <-e.eventCh:
+			// TODO if currently building, dont check for file changes in a given []exclusions -> inf loop
+
 			if !e.isIncludeExt(filename) {
+				continue
+			}
+			if is, _ := e.isExcludeRegex(filename); is {
 				continue
 			}
 			if e.config.Build.ExcludeUnchanged {
