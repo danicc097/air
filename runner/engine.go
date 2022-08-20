@@ -320,6 +320,7 @@ func (e *Engine) start() {
 				continue
 			}
 			if is, _ := e.isExcludeRegex(filename); is {
+				// fmt.Printf("%s is a '%t' excludedRegex\n", filename, is)
 				continue
 			}
 			if e.config.Build.ExcludeUnchanged {
@@ -371,6 +372,13 @@ func (e *Engine) buildRun() {
 	case <-e.canExit:
 	default:
 	}
+
+	// TODO flag build.stop_watch that adds directories or files to ignore while building
+	// it can be either dir or file, since:
+	// 	Remove stops watching the named file or directory (non-recursively).
+	e.watcher.Remove("internal/handlers/")
+	e.watcher.Remove("internal/services/")
+
 	var err error
 	if err = e.building(); err != nil {
 		e.canExit <- true
@@ -380,6 +388,9 @@ func (e *Engine) buildRun() {
 			return
 		}
 	}
+
+	e.watcher.Add("internal/handlers/")
+	e.watcher.Add("internal/services/")
 
 	select {
 	case <-e.buildRunStopCh:
