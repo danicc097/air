@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/cosmtrek/air/runner"
+	"github.com/danicc097/air/runner"
 )
 
 var (
@@ -45,8 +45,8 @@ func parseFlag(args []string) {
 
 func main() {
 	fmt.Printf(`
-  __    _   ___  
- / /\  | | | |_) 
+  __    _   ___
+ / /\  | | | |_)
 /_/--\ |_| |_| \_ %s, built with Go %s
 
 `, airVersion, goVersion)
