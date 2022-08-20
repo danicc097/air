@@ -373,11 +373,10 @@ func (e *Engine) buildRun() {
 	default:
 	}
 
-	// TODO flag build.stop_watch that adds directories or files to ignore while building
-	// it can be either dir or file, since:
-	// 	Remove stops watching the named file or directory (non-recursively).
-	e.watcher.Remove("internal/handlers/")
-	e.watcher.Remove("internal/services/")
+	for _, p := range e.config.Build.StopWatch {
+		e.buildLog("ignoring changes while building in: %s\n", p)
+		e.watcher.Remove(p)
+	}
 
 	var err error
 	if err = e.building(); err != nil {
@@ -388,9 +387,9 @@ func (e *Engine) buildRun() {
 			return
 		}
 	}
-
-	e.watcher.Add("internal/handlers/")
-	e.watcher.Add("internal/services/")
+	for _, p := range e.config.Build.StopWatch {
+		e.watcher.Add(p)
+	}
 
 	select {
 	case <-e.buildRunStopCh:
