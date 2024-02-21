@@ -130,6 +130,16 @@ func (e *Engine) checkIncludeFile(path string) bool {
 	return false
 }
 
+func (e *Engine) isIncludeFile(path string) bool {
+	ext := filepath.Ext(path)
+	for _, v := range e.config.Build.IncludeFile {
+		if ext == "."+strings.TrimSpace(v) {
+			return true
+		}
+	}
+	return false
+}
+
 func (e *Engine) isIncludeExt(path string) bool {
 	ext := filepath.Ext(path)
 	for _, v := range e.config.Build.IncludeExt {
@@ -166,7 +176,7 @@ func (e *Engine) isExcludeFile(path string) bool {
 
 func (e *Engine) writeBuildErrorLog(msg string) error {
 	var err error
-	f, err := os.OpenFile(e.config.buildLogPath(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(e.config.buildLogPath(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 	if err != nil {
 		return err
 	}

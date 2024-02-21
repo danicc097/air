@@ -322,7 +322,7 @@ func (e *Engine) start() {
 			e.mainDebug("exit in start")
 			return
 		case filename = <-e.eventCh:
-			if !e.isIncludeExt(filename) {
+			if !e.isIncludeExt(filename) && !e.isIncludeFile(filename) {
 				continue
 			}
 			if e.config.Build.ExcludeUnchanged {
